@@ -7,7 +7,6 @@ interface LandingScreenProps {
 
 export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [logoFloat, setLogoFloat] = useState(0)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -21,20 +20,6 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  useEffect(() => {
-    let animationFrame: number
-    let startTime = Date.now()
-
-    const animate = () => {
-      const elapsed = (Date.now() - startTime) / 1000
-      setLogoFloat(Math.sin(elapsed * 0.8) * 15)
-      animationFrame = requestAnimationFrame(animate)
-    }
-
-    animate()
-    return () => cancelAnimationFrame(animationFrame)
-  }, [])
-
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
@@ -44,18 +29,6 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
       } as React.CSSProperties}
       enable-xr
     >
-      {/* Welcome Banner - Big and Bold */}
-      <div
-        className="absolute top-12 left-1/2 -translate-x-1/2 z-20"
-        style={{ transform: 'translateX(-50%) translateZ(150px)' }}
-      >
-        <h2 className="text-9xl font-black text-white welcome-bold" style={{
-          textShadow: '0 0 40px rgba(100, 150, 255, 0.8), 0 0 80px rgba(150, 100, 255, 0.6)',
-          letterSpacing: '0.1em',
-        }}>
-          WELCOME
-        </h2>
-      </div>
 
       {/* Main Content */}
       <div
@@ -76,7 +49,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
           <div
             className="mb-12 logo-3d-container"
             style={{
-              transform: `translateY(${logoFloat}px) rotateY(${mousePosition.x * 0.3}deg) rotateX(${-mousePosition.y * 0.3}deg) translateZ(50px)`,
+              transform: `rotateY(${mousePosition.x * 0.3}deg) rotateX(${-mousePosition.y * 0.3}deg) translateZ(50px)`,
               transformStyle: 'preserve-3d',
               transition: 'transform 0.1s ease-out',
               perspective: '1000px',
@@ -95,10 +68,6 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
             </div>
           </div>
 
-          <h1 className="text-8xl font-bold text-white mb-12 text-center title-glow">
-            MyOrbit
-          </h1>
-
           <button
             onClick={onEnter}
             className="w-full px-12 py-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-2xl font-semibold rounded-xl transition-all shadow-2xl button-pulse"
@@ -107,7 +76,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
               transform: 'translateZ(20px)',
             }}
           >
-            Enter
+            Enter Note Garden
           </button>
         </div>
       </div>
