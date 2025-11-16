@@ -1,12 +1,13 @@
 // src/App.tsx
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import { FocusGoalBar } from './components/FocusGoalBar'
 import { LandingScreen } from './components/LandingScreen'
 import { StickerNote } from './components/StickerNote'
-import { MusicScreen } from './components/MusicScreen'
 import { MusicApp } from './components/MusicApp'
 import { NoteDetailView } from './components/NoteDetailView'
+import MusicPlayerSceneWrapper from './MusicPlayerSceneWrapper'
 import './App.css'
 import SecondPage from './SecondPage'
 
@@ -22,9 +23,8 @@ const SUBJECTS = [
 ]
 
 /** Main board scene ("/") */
-function MainScene() {
+function MainScene({ onToggleMusic, onBackToWelcome }: { onToggleMusic: () => void; onBackToWelcome: () => void }) {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
-  const [showMusicPanel, setShowMusicPanel] = useState(false)
   const [focusItems, setFocusItems] = useState([
     { id: 1, text: 'Review user feedback', completed: true },
     { id: 2, text: 'Update wireframes', completed: false },
@@ -62,31 +62,13 @@ function MainScene() {
     )
   }
 
-  // If music panel is open, show full screen music
-  if (showMusicPanel) {
-    return (
-      <div
-        className="min-h-screen"
-        style={
-          {
-            '--xr-background-material': 'transparent',
-            backgroundColor: 'transparent',
-          } as React.CSSProperties
-        }
-        enable-xr
-      >
-        <MusicScreen onClose={() => setShowMusicPanel(false)} />
-      </div>
-    )
-  }
-
   return (
     <div
       className="min-h-screen"
       style={
         {
-          '--xr-background-material': 'transparent',
-          backgroundColor: 'transparent',
+        '--xr-background-material': 'transparent',
+        backgroundColor: 'transparent',
         } as React.CSSProperties
       }
       enable-xr
@@ -95,12 +77,27 @@ function MainScene() {
         className="relative min-h-screen pt-24"
         style={{ perspective: '2000px' }}
       >
-        {/* TOP RIGHT: Music App */}
+        {/* TOP LEFT: Back to Welcome Button */}
+        <div
+          className="absolute top-8 left-8 z-20"
+          style={{ transform: 'translateZ(50px)' }}
+        >
+            <button
+            onClick={onBackToWelcome}
+            className="flex items-center gap-2 px-5 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl text-white transition-colors shadow-lg"
+              type="button"
+            >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-semibold">Back to Welcome</span>
+            </button>
+          </div>
+
+        {/* TOP RIGHT: Music App - Always visible */}
         <div
           className="absolute top-8 right-8 z-20"
           style={{ transform: 'translateZ(50px)' }}
         >
-          <MusicApp onClick={() => setShowMusicPanel(true)} />
+          <MusicApp onClick={onToggleMusic} />
         </div>
 
         {/* CENTER: Focus Goal Bar and Sticker Notes */}
@@ -155,17 +152,31 @@ function MainScene() {
 /** Router wrapper with landing screen */
 export default function App() {
   const [hasEntered, setHasEntered] = useState(false)
+  const [showMusicPlayer, setShowMusicPlayer] = useState(false)
+
+  const toggleMusicPlayer = () => {
+    setShowMusicPlayer(prev => !prev)
+  }
 
   if (!hasEntered) {
     return <LandingScreen onEnter={() => setHasEntered(true)} />
   }
 
   return (
-    <Router basename={__XR_ENV_BASE__}>
-      <Routes>
-        <Route path="/second-page" element={<SecondPage />} />
-        <Route path="/" element={<MainScene />} />
-      </Routes>
-    </Router>
+    <>
+      {/* Music Player Scene - Independent and Draggable (rendered outside Router) */}
+      {showMusicPlayer && (
+        <MusicPlayerSceneWrapper
+          onClose={() => setShowMusicPlayer(false)}
+        />
+      )}
+      
+      <Router basename={__XR_ENV_BASE__}>
+        <Routes>
+          <Route path="/second-page" element={<SecondPage />} />
+          <Route path="/" element={<MainScene onToggleMusic={toggleMusicPlayer} onBackToWelcome={() => setHasEntered(false)} />} />
+        </Routes>
+      </Router>
+    </>
   )
 }

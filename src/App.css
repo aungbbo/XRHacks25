@@ -17,3 +17,15 @@ html.is-spatial .min-h-screen {
   --xr-roughness: 0.1;
 }
 
+/* Animated floating music notes - coming from top */
+@keyframes floatNoteUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0) translateX(0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-150px) translateX(calc(var(--random-x, 0) * 1px)) scale(0.4) rotate(360deg);
+  }
+}
+
