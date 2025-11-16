@@ -1,0 +1,146 @@
+:root {
+    --bg: grey;          /* background color */
+    --size: 180px;       /* bubble diameter */
+    --float-speed: 3s;   /* float animation speed */
+  }
+  
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  
+  body {
+    margin: 0;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    overflow: hidden;
+  }
+  
+  /* === GRID: 2 rows (2 on top, 3 on bottom) === */
+  .bubble-grid {
+    display: grid;
+    grid-template-columns: repeat(5, var(--size));
+    grid-template-rows: repeat(2, var(--size));
+    column-gap: 30px;
+    row-gap: 120px;
+    justify-items: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  /* Top row: 3 bubbles */
+  .bubble-grid a:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .bubble-grid a:nth-child(2) { grid-column: 3; grid-row: 1; }
+  .bubble-grid a:nth-child(3) { grid-column: 5; grid-row: 1; }
+  
+  /* Bottom row: 2 bubbles */
+  .bubble-grid a:nth-child(4) { grid-column: 2; grid-row: 2; }
+  .bubble-grid a:nth-child(5) { grid-column: 4; grid-row: 2; }
+  
+  /* === Bubble base styling === */
+  .bubble {
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    backdrop-filter: blur(8px) saturate(140%);
+    cursor: pointer;
+    text-decoration: none;
+  
+    translate: 0 0;
+    scale: 1;
+    animation: float var(--float-speed) ease-in-out var(--delay) infinite;
+    transition: scale 0.25s ease, box-shadow 0.25s ease;
+  }
+  
+  /* Floating motion (translate only) */
+  @keyframes float {
+    0%   { translate: 0 0; }
+    50%  { translate: 0 -25px; }
+    100% { translate: 0 0; }
+  }
+  
+  /* Text inside bubble */
+  .bubble span {
+    position: relative;
+    color: rgba(60, 0, 40, 0.85);
+    font-weight: 700;
+    font-size: clamp(16px, 2.2vw, 22px);
+    text-shadow:
+      0 1px 2px rgba(255,255,255,0.9),
+      0 0 6px rgba(255,255,255,0.6);
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  /* === Colors + hover effects === */
+  
+  /* 1️⃣ Pink */
+  .bubble-grid a:nth-child(1) {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85) 0%, rgba(255,180,200,0.55) 35%, rgba(255,140,180,0.35) 60%, rgba(255,120,160,0.25) 80%, rgba(255,192,203,0.15) 100%);
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), inset 0 -15px 25px rgba(255,100,150,0.3), 0 0 40px rgba(255,150,180,0.45);
+  }
+  .bubble-grid a:nth-child(1):hover {
+    scale: 1.05;
+    box-shadow:
+      inset 0 12px 25px rgba(255,255,255,0.8),
+      inset 0 -15px 25px rgba(255,100,150,0.45),
+      0 0 80px rgba(255,140,180,0.5);
+  }
+  
+  /* 2️⃣ Blue */
+  .bubble-grid a:nth-child(2) {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85) 0%, rgba(160,200,255,0.55) 35%, rgba(120,170,255,0.35) 60%, rgba(100,150,255,0.25) 80%, rgba(180,210,255,0.15) 100%);
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), inset 0 -15px 25px rgba(120,170,255,0.3), 0 0 40px rgba(120,160,255,0.45);
+  }
+  .bubble-grid a:nth-child(2):hover {
+    scale: 1.05;
+    box-shadow:
+      inset 0 12px 25px rgba(255,255,255,0.8),
+      inset 0 -15px 25px rgba(120,170,255,0.45),
+      0 0 80px rgba(140,190,255,0.5);
+  }
+  
+  /* 3️⃣ Green */
+  .bubble-grid a:nth-child(3) {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85) 0%, rgba(170,255,200,0.55) 35%, rgba(130,240,170,0.35) 60%, rgba(100,220,150,0.25) 80%, rgba(200,255,220,0.15) 100%);
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), inset 0 -15px 25px rgba(100,230,150,0.3), 0 0 40px rgba(130,240,180,0.45);
+  }
+  .bubble-grid a:nth-child(3):hover {
+    scale: 1.05;
+    box-shadow:
+      inset 0 12px 25px rgba(255,255,255,0.8),
+      inset 0 -15px 25px rgba(100,230,150,0.45),
+      0 0 80px rgba(130,255,180,0.5);
+  }
+  
+  /* 4️⃣ Yellow */
+  .bubble-grid a:nth-child(4) {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85) 0%, rgba(255,245,180,0.55) 35%, rgba(255,235,140,0.35) 60%, rgba(255,220,100,0.25) 80%, rgba(255,245,200,0.15) 100%);
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), inset 0 -15px 25px rgba(255,220,120,0.3), 0 0 40px rgba(255,230,120,0.45);
+  }
+  .bubble-grid a:nth-child(4):hover {
+    scale: 1.05;
+    box-shadow:
+      inset 0 12px 25px rgba(255,255,255,0.8),
+      inset 0 -15px 25px rgba(255,220,120,0.45),
+      0 0 80px rgba(255,240,150,0.5);
+  }
+  
+  /* 5️⃣ Purple */
+  .bubble-grid a:nth-child(5) {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85) 0%, rgba(220,180,255,0.55) 35%, rgba(190,140,255,0.35) 60%, rgba(170,120,255,0.25) 80%, rgba(230,210,255,0.15) 100%);
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), inset 0 -15px 25px rgba(190,140,255,0.3), 0 0 40px rgba(200,150,255,0.45);
+  }
+  .bubble-grid a:nth-child(5):hover {
+    scale: 1.05;
+    box-shadow:
+      inset 0 12px 25px rgba(255,255,255,0.8),
+      inset 0 -15px 25px rgba(190,140,255,0.45),
+      0 0 80px rgba(210,170,255,0.5);
+  }
+  

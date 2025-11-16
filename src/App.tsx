@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { FocusGoalBar } from './components/FocusGoalBar'
@@ -23,7 +23,7 @@ const SUBJECTS = [
 ]
 
 /** Main board scene ("/") */
-function MainScene({ onToggleMusic, onBackToWelcome }: { onToggleMusic: () => void; onBackToWelcome: () => void }) {
+function MainScene({ onToggleMusic, onBackToWelcome, animateTaskCards }: { onToggleMusic: () => void; onBackToWelcome: () => void; animateTaskCards: boolean }) {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
   const [focusItems, setFocusItems] = useState([
     { id: 1, text: 'Review user feedback', completed: true },
@@ -131,15 +131,22 @@ function MainScene({ onToggleMusic, onBackToWelcome }: { onToggleMusic: () => vo
           {SUBJECTS.map((subject, index) => (
             <div
               key={subject.name}
+              className={animateTaskCards ? 'taskcard-bubble' : ''}
               style={{
-                transform: `translateZ(${index * 15 + 40}px)`,
+                perspective: '2000px',
               }}
             >
-              <StickerNote
-                subject={subject.name}
-                color={subject.color}
-                onClick={() => setSelectedSubject(subject.name)}
-              />
+              <div
+                style={{
+                  transform: `translateZ(${index * 15 + 40}px)`,
+                }}
+              >
+                <StickerNote
+                  subject={subject.name}
+                  color={subject.color}
+                  onClick={() => setSelectedSubject(subject.name)}
+                />
+              </div>
             </div>
           ))}
           </div>
@@ -153,13 +160,48 @@ function MainScene({ onToggleMusic, onBackToWelcome }: { onToggleMusic: () => vo
 export default function App() {
   const [hasEntered, setHasEntered] = useState(false)
   const [showMusicPlayer, setShowMusicPlayer] = useState(false)
+  const [animateTaskCards, setAnimateTaskCards] = useState(false)
+  const cardAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const toggleMusicPlayer = () => {
     setShowMusicPlayer(prev => !prev)
   }
 
+  const startCardAnimation = () => {
+    setAnimateTaskCards(true)
+    if (cardAnimationTimeoutRef.current) {
+      clearTimeout(cardAnimationTimeoutRef.current)
+    }
+    cardAnimationTimeoutRef.current = setTimeout(() => {
+      setAnimateTaskCards(false)
+      cardAnimationTimeoutRef.current = null
+    }, 6000)
+  }
+
+  const handleEnter = () => {
+    setHasEntered(true)
+    startCardAnimation()
+  }
+
+  const handleBackToWelcome = () => {
+    setHasEntered(false)
+    setAnimateTaskCards(false)
+    if (cardAnimationTimeoutRef.current) {
+      clearTimeout(cardAnimationTimeoutRef.current)
+      cardAnimationTimeoutRef.current = null
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (cardAnimationTimeoutRef.current) {
+        clearTimeout(cardAnimationTimeoutRef.current)
+      }
+    }
+  }, [])
+
   if (!hasEntered) {
-    return <LandingScreen onEnter={() => setHasEntered(true)} />
+    return <LandingScreen onEnter={handleEnter} />
   }
 
   return (
@@ -174,7 +216,7 @@ export default function App() {
       <Router basename={__XR_ENV_BASE__}>
         <Routes>
           <Route path="/second-page" element={<SecondPage />} />
-          <Route path="/" element={<MainScene onToggleMusic={toggleMusicPlayer} onBackToWelcome={() => setHasEntered(false)} />} />
+          <Route path="/" element={<MainScene onToggleMusic={toggleMusicPlayer} onBackToWelcome={handleBackToWelcome} animateTaskCards={animateTaskCards} />} />
         </Routes>
       </Router>
     </>
