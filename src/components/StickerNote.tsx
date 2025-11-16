@@ -1,34 +1,34 @@
 import React from 'react'
-import { BookOpen } from 'lucide-react'
 
 interface StickerNoteProps {
   subject: string
-  color: string
   onClick: () => void
+  theme: 'pink' | 'blue' | 'green' | 'yellow' | 'purple'
+  floating?: boolean
+  delay?: number
 }
 
 export const StickerNote: React.FC<StickerNoteProps> = ({
   subject,
-  color,
   onClick,
+  theme,
+  floating = false,
+  delay = 0,
 }) => {
+  const themeClass = `bubble-theme-${theme}`
+
   return (
-    <div
-      className="relative w-64 h-64 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform spatial-translucent"
-      style={{
-        backgroundColor: color,
-      }}
+    <button
+      type="button"
+      className={['bubble', themeClass, floating ? 'taskcard-bubble bubble-floating' : ''].filter(Boolean).join(' ')}
       onClick={onClick}
+      style={{ '--bubble-delay': `${delay}s` } as React.CSSProperties}
       enable-xr
     >
-      <div className="absolute top-3 left-3 w-5 h-5 bg-black/10 rounded-full" />
-      <div className="p-6 h-full flex flex-col justify-center items-center">
-        <BookOpen className="w-16 h-16 text-white/90 mb-4" />
-        <h3 className="text-2xl font-bold text-white text-center">
-          {subject}
-        </h3>
+      <div className="bubble-content">
+        <span className="bubble-label">{subject}</span>
       </div>
-    </div>
+    </button>
   )
 }
 

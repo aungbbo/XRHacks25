@@ -14,12 +14,12 @@ import SecondPage from './SecondPage'
 // WebSpatial injects this; declare so TS doesn't complain
 declare const __XR_ENV_BASE__: string
 
-const SUBJECTS = [
-  { name: 'Physics', color: '#FF6B6B' },
-  { name: 'Math', color: '#4ECDC4' },
-  { name: 'Chemistry', color: '#45B7D1' },
-  { name: 'Biology', color: '#96CEB4' },
-  { name: 'History', color: '#FFEAA7' },
+const SUBJECTS: Array<{ name: string; theme: 'pink' | 'blue' | 'purple' | 'yellow' | 'green' }> = [
+  { name: 'Maths', theme: 'pink' },
+  { name: 'Engineering', theme: 'blue' },
+  { name: 'Physics', theme: 'purple' },
+  { name: 'Biology', theme: 'yellow' },
+  { name: 'History', theme: 'green' },
 ]
 
 /** Main board scene ("/") */
@@ -119,36 +119,19 @@ function MainScene({ onToggleMusic, onBackToWelcome, animateTaskCards }: { onTog
           </div>
 
           {/* Sticker Notes */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '1rem',
-              width: '600px',
-              justifyItems: 'center',
-            }}
-          >
-          {SUBJECTS.map((subject, index) => (
-            <div
-              key={subject.name}
-              className={animateTaskCards ? 'taskcard-bubble' : ''}
-              style={{
-                perspective: '2000px',
-              }}
-            >
-              <div
-                style={{
-                  transform: `translateZ(${index * 15 + 40}px)`,
-                }}
-              >
+          <div style={{ transform: 'translateZ(60px)' }}>
+            <div className="bubble-grid">
+              {SUBJECTS.map((subject, index) => (
                 <StickerNote
+                  key={subject.name}
                   subject={subject.name}
-                  color={subject.color}
+                  theme={subject.theme}
+                  delay={index * 0.3}
+                  floating={animateTaskCards}
                   onClick={() => setSelectedSubject(subject.name)}
                 />
-              </div>
+              ))}
             </div>
-          ))}
           </div>
         </div>
       </div>

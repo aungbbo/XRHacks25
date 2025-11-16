@@ -5,12 +5,12 @@ import { MusicApp } from './components/MusicApp'
 import { NoteDetailView } from './components/NoteDetailView'
 import './App.css'
 
-const SUBJECTS = [
-  { name: 'Physics', color: '#FF6B6B' },
-  { name: 'Math', color: '#4ECDC4' },
-  { name: 'Chemistry', color: '#45B7D1' },
-  { name: 'Biology', color: '#96CEB4' },
-  { name: 'History', color: '#FFEAA7' },
+const SUBJECTS: Array<{ name: string; theme: 'pink' | 'blue' | 'green' | 'yellow' | 'purple' }> = [
+  { name: 'Physics', theme: 'pink' },
+  { name: 'Math', theme: 'blue' },
+  { name: 'Engineering', theme: 'green' },
+  { name: 'Biology', theme: 'yellow' },
+  { name: 'History', theme: 'purple' },
 ]
 
 interface MainSceneWrapperProps {
@@ -195,29 +195,19 @@ export default function MainSceneWrapper({ onToggleMusic }: MainSceneWrapperProp
           </div>
 
           {/* Sticker Notes */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '1rem',
-              width: '600px',
-              justifyItems: 'center',
-            }}
-          >
-            {SUBJECTS.map((subject, index) => (
-              <div
-                key={subject.name}
-                style={{
-                  transform: `translateZ(${index * 15 + 40}px)`,
-                }}
-              >
+          <div style={{ transform: 'translateZ(60px)' }}>
+            <div className="bubble-grid">
+              {SUBJECTS.map((subject, index) => (
                 <StickerNote
+                  key={subject.name}
                   subject={subject.name}
-                  color={subject.color}
+                  theme={subject.theme}
+                  delay={index * 0.3}
+                  floating={false}
                   onClick={() => setSelectedSubject(subject.name)}
                 />
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
