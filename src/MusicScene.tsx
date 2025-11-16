@@ -26,7 +26,7 @@ export default function MusicScene() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const tracks: Track[] = [
-    { name: 'Good Night Lo-Fi', file: '/good-night-lofi-cozy-chill-music-160166 (1).mp3' },
+    { name: 'Good Night Lo-Fi', file: '/good-night-lofi-cozy-chill-music-160166.mp3' },
     { name: 'Study Focus', file: '' },
     { name: 'Ambient Chill', file: '' },
     { name: 'Classical Study', file: '' },
@@ -47,9 +47,26 @@ export default function MusicScene() {
     }
 
     try {
-      // Pause and load new track
+      // Pause current audio
+      const wasPlaying = isPlaying
       audioRef.current.pause()
+      setIsPlaying(false)
+      
+      // Load new track
       audioRef.current.load()
+      
+      // If it was playing, wait a bit then play the new track
+      if (wasPlaying) {
+        const timer = setTimeout(() => {
+          if (audioRef.current) {
+            audioRef.current.play().catch(error => {
+              console.error('Error auto-playing after track change:', error)
+            })
+            setIsPlaying(true)
+          }
+        }, 100)
+        return () => clearTimeout(timer)
+      }
     } catch (error) {
       console.error('Error loading track:', error)
       setIsPlaying(false)
@@ -373,6 +390,7 @@ export default function MusicScene() {
 
         {/* Audio Element - Always render to ensure ref is available */}
         <audio
+          key={currentTrackData.file || 'no-track'}
           ref={audioRef}
           preload="auto"
           src={
@@ -390,13 +408,26 @@ export default function MusicScene() {
           }}
           onError={(e) => {
             console.error('Audio error:', e)
+            const audio = e.currentTarget
+            console.error('Audio error details:', {
+              error: audio.error,
+              networkState: audio.networkState,
+              readyState: audio.readyState,
+              src: audio.src
+            })
             setIsPlaying(false)
             if (currentTrackData.file) {
               console.error('Failed to load:', currentTrackData.file)
             }
           }}
           onLoadedData={() => {
-            console.log('Audio loaded successfully')
+            console.log('Audio loaded successfully:', currentTrackData.file)
+          }}
+          onCanPlay={() => {
+            console.log('Audio can play:', currentTrackData.file)
+          }}
+          onLoadStart={() => {
+            console.log('Audio loading started:', currentTrackData.file)
           }}
         />
       </div>
