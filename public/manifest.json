@@ -1,7 +1,7 @@
 {
-  "name": "Ideaverse - Productivity Hub",
-  "short_name": "Ideaverse",
-  "description": "A spatial productivity hub for idea and task management",
+  "name": "MindOrbit",
+  "short_name": "MindOrbit",
+  "description": "A spatial productivity hub for studying and organization",
   "start_url": "/",
   "display": "minimal-ui",
   "theme_color": "#000000",
@@ -10,13 +10,13 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "/logo-ideaverse.png",
+      "src": "/mindorbit.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo-ideaverse2.png",
+      "src": "/mindorbit.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
