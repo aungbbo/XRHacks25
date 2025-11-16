@@ -6,7 +6,7 @@ import { NoteDetailView } from './components/NoteDetailView'
 import './App.css'
 
 const SUBJECTS = [
-  { name: 'Physics', color: '#FF6B6B' },
+  { name: 'My Planner', color: '#FF6B6B' },
   { name: 'Math', color: '#4ECDC4' },
   { name: 'Chemistry', color: '#45B7D1' },
   { name: 'Biology', color: '#96CEB4' },
