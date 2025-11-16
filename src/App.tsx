@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
-import { FocusGoalBar } from './components/FocusGoalBar'
 import { LandingScreen } from './components/LandingScreen'
 import { StickerNote } from './components/StickerNote'
 import { MusicApp } from './components/MusicApp'
@@ -27,12 +26,12 @@ const SUBJECTS: Array<{ name: string; theme: 'pink' | 'blue' | 'green' | 'yellow
 function MainScene({ onBackToWelcome, animateTaskCards }: { onBackToWelcome: () => void; animateTaskCards: boolean }) {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
   const [focusItems, setFocusItems] = useState([
-    { id: 1, text: 'Review user feedback', completed: true },
-    { id: 2, text: 'Update wireframes', completed: false },
-    { id: 3, text: 'Prototype new interaction', completed: false },
-    { id: 4, text: 'Schedule team sync', completed: false },
-    { id: 5, text: 'Research AR best practices', completed: false },
+    { id: 1, text: 'Review class notes', completed: true },
+    { id: 2, text: 'Outline project ideas', completed: false },
+    { id: 3, text: 'Email study partner', completed: false },
   ])
+
+  const [newFocusText, setNewFocusText] = useState('')
 
   const toggleFocusItem = (id: number) => {
     setFocusItems(items =>
@@ -40,6 +39,20 @@ function MainScene({ onBackToWelcome, animateTaskCards }: { onBackToWelcome: () 
         item.id === id ? { ...item, completed: !item.completed } : item
       )
     )
+  }
+
+  const addFocusItem = () => {
+    const text = newFocusText.trim()
+    if (!text) return
+    setFocusItems(items => [
+      ...items,
+      { id: Date.now(), text, completed: false },
+    ])
+    setNewFocusText('')
+  }
+
+  const deleteFocusItem = (id: number) => {
+    setFocusItems(items => items.filter(item => item.id !== id))
   }
 
   // If a subject is selected, show only the note detail view (full screen)
@@ -94,33 +107,88 @@ function MainScene({ onBackToWelcome, animateTaskCards }: { onBackToWelcome: () 
       enable-xr
     >
       <div
-        className="relative min-h-screen pt-24"
+        className="relative min-h-screen pt-32 pb-24"
         style={{ perspective: '2000px' }}
       >
-        {/* TOP LEFT: Back to Welcome Button */}
         <div
-          className="absolute top-8 left-8 z-20"
+          className="absolute top-8 left-0 right-0 z-20 flex items-center justify-between px-20"
           style={{ transform: 'translateZ(50px)' }}
         >
-            <button
+          <button
             onClick={onBackToWelcome}
-            className="flex items-center gap-2 px-5 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl text-white transition-colors shadow-lg"
-              type="button"
-            >
+            className="flex items-center gap-2 px-4 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl text-white transition-colors shadow-lg"
+            type="button"
+          >
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back to Welcome</span>
-            </button>
+            <span className="font-semibold">Back</span>
+          </button>
+
+          <div className="rounded-3xl border border-white/20 bg-white/10 p-6 backdrop-blur-xl shadow-2xl w-[320px] mx-8" enable-xr>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold">Focus To-Do</h3>
+              <span className="text-xs text-white/60">
+                {focusItems.filter(item => item.completed).length} of {focusItems.length} done
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {focusItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => toggleFocusItem(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl border text-left transition-colors ${
+                    item.completed
+                      ? 'border-emerald-400/40 bg-emerald-500/10 hover:bg-emerald-500/15'
+                      : 'border-white/15 bg-white/5 hover:bg-white/10'
+                  }`}
+                  type="button"
+                >
+                  <span
+                    className={`w-5 h-5 rounded-full border flex items-center justify-center text-xs ${
+                      item.completed ? 'border-emerald-300 bg-emerald-500 text-white' : 'border-white/40 text-white/60'
+                    }`}
+                  >
+                    {item.completed ? '✓' : ''}
+                  </span>
+                  <span className={`flex-1 text-sm ${item.completed ? 'line-through text-white/60' : 'text-white'}`}>
+                    {item.text}
+                  </span>
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      deleteFocusItem(item.id)
+                    }}
+                    className="text-xs text-white/50 hover:text-white cursor-pointer"
+                  >
+                    Remove
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <input
+                value={newFocusText}
+                onChange={(e) => setNewFocusText(e.target.value)}
+                placeholder="Add focus task..."
+                className="flex-1 px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-sm text-white placeholder:text-white/40"
+                onKeyDown={(e) => e.key === 'Enter' && addFocusItem()}
+              />
+              <button
+                onClick={addFocusItem}
+                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm"
+                type="button"
+              >
+                Add
+              </button>
+            </div>
           </div>
 
-        {/* TOP RIGHT: Music App - Always visible */}
-        <div
-          className="absolute top-8 right-8 z-20"
-          style={{ transform: 'translateZ(50px)' }}
-        >
-          <MusicApp />
+          <div className="flex-shrink-0">
+            <MusicApp />
+          </div>
         </div>
 
-        {/* CENTER: Focus Goal Bar and Sticker Notes */}
         <div
           className="absolute"
           style={{
@@ -133,12 +201,6 @@ function MainScene({ onBackToWelcome, animateTaskCards }: { onBackToWelcome: () 
             gap: '2rem',
           }}
         >
-          {/* Focus Goal Bar */}
-          <div style={{ transform: 'translateZ(50px)' }}>
-            <FocusGoalBar items={focusItems} onToggle={toggleFocusItem} />
-          </div>
-
-          {/* Sticker Notes */}
           <div style={{ transform: 'translateZ(60px)' }}>
             <div className="bubble-grid">
               {SUBJECTS.map((subject, index) => (

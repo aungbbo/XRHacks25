@@ -278,7 +278,7 @@ export const Planner: React.FC<PlannerProps> = ({ onClose }) => {
           type="button"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-semibold">Back to Home</span>
+          <span className="font-semibold">Back</span>
         </button>
 
         {/* Main Planner Container */}

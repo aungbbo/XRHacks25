@@ -118,6 +118,17 @@ export const NoteDetailView: React.FC<NoteDetailViewProps> = ({
   const [backgroundColor, setBackgroundColor] = useState('#FFFFFF')
   const [showColorPicker, setShowColorPicker] = useState(false)
 
+  const getTranslucentColor = (color: string) => {
+    if (color === '#FFFFFF') {
+      return 'rgba(255, 255, 255, 0.08)'
+    }
+    if (color.startsWith('#') && color.length === 7) {
+      return `${color}CC`
+    }
+    return 'rgba(255, 255, 255, 0.08)'
+  }
+
+  const panelBackground = getTranslucentColor(backgroundColor)
   const summary = AI_SUMMARIES[subject] || 'No summary available for this subject.'
 
   return (
@@ -141,14 +152,14 @@ export const NoteDetailView: React.FC<NoteDetailViewProps> = ({
           style={{ transform: 'translateZ(100px)' }}
         >
           <ArrowLeft className="w-6 h-6" />
-          <span className="font-semibold text-lg">Back to Home</span>
+          <span className="font-semibold text-lg">Back</span>
         </button>
 
         {/* Paper/Note */}
         <div
-          className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-12 spatial-translucent flex flex-col"
+          className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-2xl p-12 spatial-translucent flex flex-col"
           style={{
-            backgroundColor: backgroundColor,
+            backgroundColor: panelBackground,
             transform: 'translateZ(150px)',
             width: '800px',
             height: '1000px',
@@ -174,15 +185,15 @@ export const NoteDetailView: React.FC<NoteDetailViewProps> = ({
           </div>
 
           {/* Background Color Button - Fixed at bottom */}
-          <div className="relative flex items-center justify-center pt-4 border-t border-gray-200 flex-shrink-0">
+          <div className="relative flex items-center justify-center pt-4 flex-shrink-0">
             <div className="relative">
               <button
                 onClick={() => setShowColorPicker(!showColorPicker)}
-                className="flex items-center gap-3 px-8 py-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                className="flex items-center gap-3 py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                 type="button"
               >
                 <Palette className="w-6 h-6" />
-                <span className="text-lg text-gray-700 font-medium">Change Background</span>
+                <span className="text-lg text-gray-700 font-medium pr-10">Change Background</span>
               </button>
 
               {showColorPicker && (
