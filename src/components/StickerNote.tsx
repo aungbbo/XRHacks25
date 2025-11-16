@@ -20,7 +20,9 @@ export const StickerNote: React.FC<StickerNoteProps> = ({
   return (
     <button
       type="button"
-      className={['bubble', themeClass, floating ? 'taskcard-bubble bubble-floating' : ''].filter(Boolean).join(' ')}
+      className={['bubble', themeClass, floating ? 'taskcard-bubble bubble-floating' : 'bubble-floating']
+        .filter(Boolean)
+        .join(' ')}
       onClick={onClick}
       style={{ '--bubble-delay': `${delay}s` } as React.CSSProperties}
       enable-xr

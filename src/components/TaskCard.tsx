@@ -54,7 +54,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       className={[
         'bubble',
         style.theme,
-        floating ? 'taskcard-bubble bubble-floating' : '',
+        floating ? 'taskcard-bubble bubble-floating' : 'bubble-floating',
         className,
       ]
         .filter(Boolean)
