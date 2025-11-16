@@ -8,21 +8,23 @@ interface NoteDetailViewProps {
 }
 
 const AI_SUMMARIES: Record<string, string> = {
-  Physics:
-    `Physics explores the fundamental laws governing matter, energy, and the universe. 
+  'My Planner':
+    `My Planner helps you organize your tasks, schedule, and goals in one place. 
 
-Key Concepts:
-• Mechanics - Motion and forces, Newton's laws describe how objects move and interact
-• Thermodynamics - Heat and energy transfer, entropy, and the laws of energy conservation
-• Electromagnetism - Electric and magnetic fields, how charged particles interact
-• Quantum Mechanics - Atomic and subatomic behavior, wave-particle duality
+Key Features:
+• Task Management - Create, organize, and track your daily tasks and to-dos
+• Calendar Integration - Schedule events, deadlines, and important dates
+• Goal Setting - Set short-term and long-term goals with progress tracking
+• Priority System - Organize tasks by importance and urgency
 
-Important Principles:
-Newton's laws of motion explain how forces affect motion. The first law states that objects at rest stay at rest unless acted upon. The second law relates force, mass, and acceleration (F=ma). The third law states that for every action there's an equal and opposite reaction.
+Planning Strategies:
+Time blocking helps you allocate specific time slots for different activities. This technique improves focus and ensures important tasks get dedicated attention. Break your day into blocks for work, breaks, and personal time.
 
-Einstein's theory of relativity revolutionized our understanding of space and time. Special relativity shows that time and space are relative, not absolute. General relativity explains gravity as the curvature of spacetime.
+The Eisenhower Matrix helps prioritize tasks by urgency and importance. Tasks are categorized into four quadrants: urgent and important, important but not urgent, urgent but not important, and neither urgent nor important.
 
-These principles help explain everything from planetary motion to particle behavior, from the smallest atoms to the largest galaxies. Understanding physics provides the foundation for engineering, technology, and our comprehension of the natural world.`,
+Weekly reviews help you reflect on progress and plan ahead. Review what you accomplished, what didn't get done, and adjust your schedule for the upcoming week.
+
+Effective planning reduces stress, increases productivity, and helps you achieve your goals. A well-organized planner becomes your roadmap to success, keeping you focused and on track with your priorities.`,
   Math: `Mathematics is the language of patterns and relationships. 
 
 Core Areas:

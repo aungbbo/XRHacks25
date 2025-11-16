@@ -243,7 +243,7 @@ export default function MusicPlayerSceneWrapper({ onClose }: MusicPlayerSceneWra
       className="fixed"
       style={{
         top: '50%',
-        right: '0px',
+        right: '20px',
         transform: `translate(calc(0% + ${position.x}px), calc(-50% + ${position.y + (isDragging ? 0 : floatOffset)}px)) translateZ(200px)`,
         cursor: isDragging ? 'grabbing !important' : 'grab',
         userSelect: 'none',

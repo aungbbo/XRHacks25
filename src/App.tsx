@@ -7,23 +7,24 @@ import { LandingScreen } from './components/LandingScreen'
 import { StickerNote } from './components/StickerNote'
 import { MusicApp } from './components/MusicApp'
 import { NoteDetailView } from './components/NoteDetailView'
-import MusicPlayerSceneWrapper from './MusicPlayerSceneWrapper'
+import { Planner } from './components/Planner'
 import './App.css'
 import SecondPage from './SecondPage'
+import MusicScene from './MusicScene'
 
 // WebSpatial injects this; declare so TS doesn't complain
 declare const __XR_ENV_BASE__: string
 
-const SUBJECTS: Array<{ name: string; theme: 'pink' | 'blue' | 'purple' | 'yellow' | 'green' }> = [
-  { name: 'Maths', theme: 'pink' },
-  { name: 'Engineering', theme: 'blue' },
-  { name: 'Physics', theme: 'purple' },
+const SUBJECTS: Array<{ name: string; theme: 'pink' | 'blue' | 'green' | 'yellow' | 'purple' }> = [
+  { name: 'My Planner', theme: 'pink' },
+  { name: 'Math', theme: 'blue' },
+  { name: 'Chemistry', theme: 'green' },
   { name: 'Biology', theme: 'yellow' },
-  { name: 'History', theme: 'green' },
-]
+  { name: 'History', theme: 'purple' },
+];
 
 /** Main board scene ("/") */
-function MainScene({ onToggleMusic, onBackToWelcome, animateTaskCards }: { onToggleMusic: () => void; onBackToWelcome: () => void; animateTaskCards: boolean }) {
+function MainScene({ onBackToWelcome, animateTaskCards }: { onBackToWelcome: () => void; animateTaskCards: boolean }) {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
   const [focusItems, setFocusItems] = useState([
     { id: 1, text: 'Review user feedback', completed: true },
@@ -43,6 +44,25 @@ function MainScene({ onToggleMusic, onBackToWelcome, animateTaskCards }: { onTog
 
   // If a subject is selected, show only the note detail view (full screen)
   if (selectedSubject) {
+    // Special handling for "My Planner" - show the Planner component
+    if (selectedSubject === 'My Planner') {
+      return (
+        <div
+          className="min-h-screen"
+          style={
+            {
+              '--xr-background-material': 'transparent',
+              backgroundColor: 'transparent',
+            } as React.CSSProperties
+          }
+          enable-xr
+        >
+          <Planner onClose={() => setSelectedSubject(null)} />
+        </div>
+      )
+    }
+    
+    // For other subjects, show the regular NoteDetailView
     return (
       <div
         className="min-h-screen"
@@ -97,7 +117,7 @@ function MainScene({ onToggleMusic, onBackToWelcome, animateTaskCards }: { onTog
           className="absolute top-8 right-8 z-20"
           style={{ transform: 'translateZ(50px)' }}
         >
-          <MusicApp onClick={onToggleMusic} />
+          <MusicApp />
         </div>
 
         {/* CENTER: Focus Goal Bar and Sticker Notes */}
@@ -142,13 +162,8 @@ function MainScene({ onToggleMusic, onBackToWelcome, animateTaskCards }: { onTog
 /** Router wrapper with landing screen */
 export default function App() {
   const [hasEntered, setHasEntered] = useState(false)
-  const [showMusicPlayer, setShowMusicPlayer] = useState(false)
   const [animateTaskCards, setAnimateTaskCards] = useState(false)
   const cardAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const toggleMusicPlayer = () => {
-    setShowMusicPlayer(prev => !prev)
-  }
 
   const startCardAnimation = () => {
     setAnimateTaskCards(true)
@@ -183,25 +198,25 @@ export default function App() {
     }
   }, [])
 
-  if (!hasEntered) {
-    return <LandingScreen onEnter={handleEnter} />
-  }
-
   return (
-    <>
-      {/* Music Player Scene - Independent and Draggable (rendered outside Router) */}
-      {showMusicPlayer && (
-        <MusicPlayerSceneWrapper
-          onClose={() => setShowMusicPlayer(false)}
+    <Router basename={__XR_ENV_BASE__}>
+      <Routes>
+        <Route path="/music" element={<MusicScene />} />
+        <Route path="/second-page" element={<SecondPage />} />
+        <Route
+          path="/"
+          element={
+            hasEntered ? (
+              <MainScene
+                onBackToWelcome={handleBackToWelcome}
+                animateTaskCards={animateTaskCards}
+              />
+            ) : (
+              <LandingScreen onEnter={handleEnter} />
+            )
+          }
         />
-      )}
-      
-      <Router basename={__XR_ENV_BASE__}>
-        <Routes>
-          <Route path="/second-page" element={<SecondPage />} />
-          <Route path="/" element={<MainScene onToggleMusic={toggleMusicPlayer} onBackToWelcome={handleBackToWelcome} animateTaskCards={animateTaskCards} />} />
-        </Routes>
-      </Router>
-    </>
+      </Routes>
+    </Router>
   )
 }

@@ -5,12 +5,12 @@ import { MusicApp } from './components/MusicApp'
 import { NoteDetailView } from './components/NoteDetailView'
 import './App.css'
 
-const SUBJECTS: Array<{ name: string; theme: 'pink' | 'blue' | 'green' | 'yellow' | 'purple' }> = [
-  { name: 'Physics', theme: 'pink' },
-  { name: 'Math', theme: 'blue' },
-  { name: 'Engineering', theme: 'green' },
-  { name: 'Biology', theme: 'yellow' },
-  { name: 'History', theme: 'purple' },
+const SUBJECTS = [
+  { name: 'My Planner', color: '#FF6B6B' },
+  { name: 'Math', color: '#4ECDC4' },
+  { name: 'Chemistry', color: '#45B7D1' },
+  { name: 'Biology', color: '#96CEB4' },
+  { name: 'History', color: '#FFEAA7' },
 ]
 
 interface MainSceneWrapperProps {
