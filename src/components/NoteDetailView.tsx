@@ -175,7 +175,7 @@ export const NoteDetailView: React.FC<NoteDetailViewProps> = ({
           {/* AI Summary - Takes up all available space */}
           <div className="flex-1 flex flex-col overflow-y-auto mb-6">
             <div className="flex items-center gap-2 mb-4 flex-shrink-0 pl-8">
-              <span className="text-2xl font-semibold text-gray-700">AI Summary</span>
+              {/* <span className="text-2xl font-semibold text-gray-700">AI Summary</span> */}
             </div>
             <div className="flex-1 text-left pl-8 pr-4">
               <p className="text-gray-700 leading-relaxed whitespace-pre-line text-xl">

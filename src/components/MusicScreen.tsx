@@ -81,7 +81,7 @@ export const MusicScreen: React.FC<MusicScreenProps> = ({ onClose }) => {
               </div>
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors shadow-lg"
+                className="w-14 h-14 rounded-full border border-blue-300/40 bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-md flex items-center justify-center transition-colors shadow-lg"
                 type="button"
               >
                 {isPlaying ? (
